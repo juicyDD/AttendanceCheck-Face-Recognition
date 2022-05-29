@@ -50,12 +50,7 @@ def show_embeddings():
     records =db.get_embeddings(db.connect(),x)
     for record in records:
         print("\n")
-        # temp = db.decode_vectors(record[1])
-        # lst=list(record)
-        # lst[1]=temp
-        # record=tuple(lst)
         print(record[1])
-    #print('Showing embeddings')
 #Create a new window
 def attendance_check():
     AttendanceCheck()
@@ -108,7 +103,8 @@ app.geometry('600x250')
 
 #Populate data
 populate_list()
-
+# db.update_diemdanh(db.connect(),'102190281',1,'buoi_1')
+print(db.get_student_of_class(db.connect(),1))
 #Start program
 app.mainloop()
 

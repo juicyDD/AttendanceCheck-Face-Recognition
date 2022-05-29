@@ -179,10 +179,39 @@ def get_embeddings(conn, mssv):
                 result.append(record)
             return result
                 # print(record)
+def get_student_of_class(conn, lophocphan):
+    cursor = conn.cursor()
+    sinhviens = []
+    query = "SELECT * FROM base_diemdanh WHERE lophocphan_id = {};".format(lophocphan)
+    try:
+        cursor.execute(query)
+        records = cursor.fetchall()
+        for record in records:
+            sinhviens.append(record[17]) #get tất cả mssv của sv trong 1 lớp học phần
+    except(Exception, Error) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            cursor.close()
+            conn.close()
+    return sinhviens
 
 def delete_embeddings(conn, mssv):
     cursor = conn.cursor()
     query = "DELETE FROM base_vectordactrung WHERE sinhvien_id = {};".format(mssv)
+    try:
+        cursor.execute(query)
+        conn.commit()
+    except(Exception, Error) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            cursor.close()
+            conn.close()
+            
+def update_diemdanh(conn, sinhvienid, lophocphanid, buoihoc):
+    cursor = conn.cursor()
+    query = "UPDATE base_diemdanh SET {} = 1 WHERE sinhvien_id = {} AND lophocphan_id = {};".format(buoihoc, sinhvienid, lophocphanid)
     try:
         cursor.execute(query)
         conn.commit()
