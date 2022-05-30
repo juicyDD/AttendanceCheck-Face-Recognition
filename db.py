@@ -161,9 +161,6 @@ def get_embeddings(conn, mssv):
         cursor.execute(query)
         records = cursor.fetchall()
         
-        #     temp = decode_vectors(record[1])
-        #     record[1] = temp
-        
     except(Exception, Error) as error:
         print(error)
     finally:

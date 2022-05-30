@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-from camera import camera_init
-import camera
+from camera_diemdanh import *
 from tkinter.ttk import *
 import cv2, db
     
@@ -21,6 +20,21 @@ class AttendanceCheck:
         self.lophp = list(self.lophp)[0]
         print('Mã lớp học phần đã chọn:', self.lophp)
         print('Buổi học đã chọn:', self.day)
+        
+        self.dssv = db.get_student_of_class(db.connect(), self.lophp)
+        # print(self.dssv)
+        for mssv in self.dssv:
+            self.vectordactrung_theolop.append(db.get_embeddings(db.connect(),mssv))
+        self.vectordactrung_theolop = self.vectordactrung_theolop[1]
+        embeddings_ref = []
+        for vector in self.vectordactrung_theolop:
+            embeddings_ref.append(vector[1])
+            
+        cap, height, width = camera_init()
+        embeddings_ref = np.array(embeddings_ref)
+        print(embeddings_ref.shape)
+        # stream(cap,embeddings_ref)
+        
             
     def callback1(self,e):
         name = self.cbbox.get()
@@ -31,9 +45,12 @@ class AttendanceCheck:
         self.lophp = lophp
         
     def __init__(self):
+        self.vectordactrung_theolop =[]
+        
         self.day = '' #buổi học
         self.lophp = '' #lớp học phần
         self.dsdiemdanh = None  #danh sách điểm danh
+        
         self.df= {'Buổi 1' :'buoi_1', 'Buổi 2' : 'buoi_2','Buổi 3': 'buoi_3','Buổi 4' : 'buoi_4',
                   'Buổi 5' : 'buoi_5', 'Buổi 6' : 'buoi_6','Buổi 7': 'buoi_7', 'Buổi 8' : 'buoi_8',
                   'Buổi 9':'buoi_9', 'Buổi 10': 'buoi_10','Buổi 11' : 'buoi_11', 'Buổi 12' : 'buoi_12',

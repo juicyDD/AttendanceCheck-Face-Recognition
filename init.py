@@ -20,6 +20,7 @@ def new_embeddings():
         print('Adding embeddings')
         cap, height, width = camera_init()
         faceprints=camera.stream(cap)
+        # print(faceprints)
         db.save_embeddings(db.connect(),x,faceprints)
     else:
         messagebox.showinfo(title=None, message="Không tìm thấy MSSV")
@@ -51,6 +52,7 @@ def show_embeddings():
     for record in records:
         print("\n")
         print(record[1])
+        print(len(record[1]))
 #Create a new window
 def attendance_check():
     AttendanceCheck()
@@ -104,7 +106,7 @@ app.geometry('600x250')
 #Populate data
 populate_list()
 # db.update_diemdanh(db.connect(),'102190281',1,'buoi_1')
-print(db.get_student_of_class(db.connect(),1))
+#print(db.get_student_of_class(db.connect(),1))
 #Start program
 app.mainloop()
 
