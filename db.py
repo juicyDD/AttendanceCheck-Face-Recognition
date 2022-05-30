@@ -135,10 +135,13 @@ def save_embeddings(conn, mssv, embeddings):
     query = "INSERT INTO base_vectordactrung (vector_dt , sinhvien_id) VALUES (%s , %s)"
     for embedding in embeddings:
         try:
-            embedding = np.array(embedding) #chuyển np array thành base64
-            embedding = base64.b64encode(embedding)
-            print(embedding)
-            data=(embedding, mssv)
+            embeddingstr = ''
+            for foo in embedding:
+                embeddingstr+= str(foo)
+                embeddingstr+= '//'
+            # embedding = base64.b64encode(embedding)
+            print(embeddingstr)
+            data=(embeddingstr, mssv)
             # query.format(embedding, mssv)
             cursor.execute(query,data)
             conn.commit()
@@ -147,9 +150,19 @@ def save_embeddings(conn, mssv, embeddings):
         #Connection Close 
     conn.close()
 def decode_vectors(vector):
-    vector = str.encode(vector)
-    r = base64.decodebytes(vector)
-    q = np.frombuffer(r, dtype=np.float64)
+    # vector = str.encode(vector)
+    # r = base64.decodebytes(vector)
+    # q = np.frombuffer(r, dtype=np.float64)
+    vectorarr = []
+    vectorarr = vector.split('//')
+    q = []
+    # print(vectorarr)
+    for bar in vectorarr:
+        try:
+            bar = float(bar)
+            q.append(bar)
+        except (Exception,Error) as error:
+            continue
     return q
     
 def get_embeddings(conn, mssv):

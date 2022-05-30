@@ -31,6 +31,7 @@ class myInference:
         self.mp_facedetection = self.mp_facedetector.FaceDetection(min_detection_confidence=0.7)
         
         #calculate distance config
+        self.threshold = 0.8
         with tf.Graph().as_default():
             self.tf_tar = tf.placeholder(dtype=tf.float32, shape =self.tf_embeddings.shape[-1])
             self.tf_ref = tf.placeholder(dtype=tf.float32,shape =self.tf_embeddings.shape)

@@ -33,7 +33,7 @@ class AttendanceCheck:
         cap, height, width = camera_init()
         embeddings_ref = np.array(embeddings_ref)
         print(embeddings_ref.shape)
-        # stream(cap,embeddings_ref)
+        stream(cap,embeddings_ref)
         
             
     def callback1(self,e):

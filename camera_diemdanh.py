@@ -60,7 +60,7 @@ def stream(cap,embeddings_ref):
             
         
         
-        
+
         
     
 
