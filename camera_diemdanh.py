@@ -51,8 +51,10 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
         if not ret:
             print("Error: failed to capture image")
             break
-        
-        embeddings,bbox=infer.vectoring(img)
+        try: 
+            embeddings,bbox=infer.vectoring(img)
+        except:
+            continue
         
         img_rgb =cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         img_rgb = img_rgb.astype(np.float32)
@@ -62,14 +64,19 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
         print(res)
         color = getColorValue(res)
         cv2.rectangle(img,(bbox[0],bbox[1]),(bbox[0]+bbox[2],bbox[1]+bbox[3]),color,2)
+        
         print(embeddings)
-        cv2.imshow('Diem danh', img) 
+        
         arg = -1
         arg = infer.distance_calculate(img)
         print(arg)
         mssv_recognized = vectordactrung_theolop[arg][2]
+        print(res)
         print(mssv_recognized)
-        sinhviencomat.append(mssv_recognized)
+        cv2.putText(img, "%s: %s" % (str(res), str(mssv_recognized)),
+            (bbox[0] + 2, bbox[1] - 2),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.8, color)
+        cv2.imshow('Diem danh', img) 
         
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q') or cv2.getWindowProperty('Diem danh',cv2.WND_PROP_VISIBLE) < 1:
