@@ -44,7 +44,9 @@ def stream(pb_path,node_dict,ref_dir,camera_source=0,resolution="480",to_write=F
     mp_facedetection = mp_facedetector.FaceDetection(min_detection_confidence=0.7)
 
     # fmd2 = FacemaskDetect(r'facemask_model2.pb')
-    fmd2 = FacemaskDetect(r'model\facemask_model_new.pb')
+    # fmd2 = FacemaskDetect(r'model\facemask_model_new.pb')
+    fmd2 = FacemaskDetect(r'model\facemask_model_3_layers_32-64-128_rm_outliers.pb')
+    
 
     frame_count = 0
     FPS = "loading"
@@ -145,6 +147,7 @@ def stream(pb_path,node_dict,ref_dir,camera_source=0,resolution="480",to_write=F
 
                     img_temp = img_rgb[bbox[1]:bbox[1]+bbox[3],bbox[0]:bbox[0]+bbox[2]]
                     res,conf =fmd2.detect(img_temp)
+                    cv2.imshow('temp',img_temp)
                     color = getColorValue(res)
                     cv2.rectangle(img,(bbox[0],bbox[1]),(bbox[0]+bbox[2],bbox[1]+bbox[3]),color,2)
                     #----FACE RECOGNITION

@@ -141,7 +141,7 @@ def stream(cap):
             cv2.destroyWindow('New Embeddings')
             infer = myInference()
             for img in imageArray:
-                embeddings=infer.vectoring(img)
+                embeddings,bbox=infer.vectoring(img)
                 embeddingsArray.append(embeddings)
             
             faceprints = average_embeddings(embeddingsArray,coordinatesArray)

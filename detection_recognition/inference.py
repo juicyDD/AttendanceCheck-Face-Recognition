@@ -71,7 +71,7 @@ class myInference:
                 self.feed_dict[self.tf_input] = img_fr
                 embeddings_tar=self.sess.run(self.tf_embeddings,feed_dict=self.feed_dict) #xuất ra embeddings của khuôn mặt đã detect
                 print(embeddings_tar[0])
-                return embeddings_tar[0]
+                return embeddings_tar[0],bbox
     def distance_calculate(self,img): #img là khuôn mặt chưa detect
         img_rgb =cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         bboxes = self.mp_facedetection.process(img_rgb)
