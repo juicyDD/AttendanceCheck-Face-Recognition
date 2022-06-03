@@ -206,7 +206,6 @@ show_btn.place(
     width=185.0,
     height=54.0
 )
-
 button_image_4 = PhotoImage(
     file=relative_to_assets("button_4.png"))
 new_btn = Button(

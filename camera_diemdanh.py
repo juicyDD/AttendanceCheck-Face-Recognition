@@ -16,7 +16,6 @@ Camera stream
 Author: Uyen Nhi
 Created: May 2022
 '''
-
 def camera_init(camera_source=0,resolution="480"):
     global imageArray, coordinatesArray, embeddingsArray, facePrints
     imageArray=[]
