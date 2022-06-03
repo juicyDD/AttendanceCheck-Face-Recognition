@@ -24,15 +24,24 @@ class AttendanceCheck:
         self.dssv = db.get_student_of_class(db.connect(), self.lophp)
         # print(self.dssv)
         for mssv in self.dssv:
-            self.vectordactrung_theolop.append(db.get_embeddings(db.connect(),mssv))
-        self.vectordactrung_theolop = self.vectordactrung_theolop[1]
+            self.vectordactrung_theolop.extend(db.get_embeddings(db.connect(),mssv))
+        print('so luong vt',len(self.vectordactrung_theolop))
+        
+        # for vt in self.vectordactrung_theolop:
+        #     vt = vt[1]
+        
+        # for vt in self.vectordactrung_theolop:
+        #     print(vt)
+        #     print('\n---------------------------')
+            
+        
         embeddings_ref = []
         for vector in self.vectordactrung_theolop:
             embeddings_ref.append(vector[1])
             
         cap, height, width = camera_init()
         embeddings_ref = np.array(embeddings_ref)
-        # print(embeddings_ref.shape)
+        print(embeddings_ref.shape)
         stream(cap,embeddings_ref,self.vectordactrung_theolop,self.lophp,self.day)
         
             
