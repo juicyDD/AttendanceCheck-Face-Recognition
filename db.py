@@ -37,7 +37,7 @@ def getSV(conn, mssv):
     # creating a cursor to perform a sql operation
     cursor = conn.cursor()
     sv = None
-    query = "SELECT * FROM base_sinhvien WHERE id = {};".format(mssv)
+    query = "SELECT * FROM students_attendance_app_sinhvien WHERE id = {};".format(mssv)
     try:
         cursor.execute(query)
         records = cursor.fetchall()
@@ -55,14 +55,15 @@ def getSV(conn, mssv):
 def getLopHocPhan(conn, magv):
     cursor = conn.cursor()
     lophocphan = []
-    query = "SELECT * FROM base_lophocphan WHERE giangvien_id = {};".format(magv)
+    query = "SELECT * FROM students_attendance_app_lophocphan WHERE giangvien_id = {};".format(magv)
+    
     try:
         cursor.execute(query)
         records = cursor.fetchall()
         for record in records:
             temp = list(record)
             mamon = temp[4]
-            temp[4] = getMon(conn, mamon)
+            temp[4] = getMon(connect(), mamon)
             lophocphan.append(temp)
     except(Exception, Error) as error:
         print(error)
@@ -75,7 +76,7 @@ def getLopHocPhan(conn, magv):
 def getGV(conn,msgv):
     cursor = conn.cursor()
     gv = None 
-    query = "SELECT * FROM base_giangvien WHERE id = {};".format(msgv)
+    query = "SELECT * FROM students_attendance_app_giangvien WHERE id = {};".format(msgv)
     try:
         cursor.execute(query)
         records = cursor.fetchall()
@@ -95,7 +96,7 @@ def getGV(conn,msgv):
 def getMon(conn,mamon):
     cursor = conn.cursor()
     mon = None 
-    query = "SELECT * FROM base_monhoc WHERE id = {};".format(mamon)
+    query = "SELECT * FROM students_attendance_app_monhoc WHERE id = {};".format(mamon)
     try:
         cursor.execute(query)
         records = cursor.fetchall()
@@ -115,7 +116,7 @@ def getMon(conn,mamon):
 def getKhoa(conn, makhoa):
     cursor= conn.cursor()
     khoa = None
-    query = "SELECT * FROM base_khoa WHERE id = '{}';".format(makhoa)
+    query = "SELECT * FROM students_attendance_app_khoa WHERE id = '{}';".format(makhoa)
     try:
         cursor.execute(query)
         records = cursor.fetchall()
@@ -132,7 +133,7 @@ def getKhoa(conn, makhoa):
         
 def save_embeddings(conn, mssv, embeddings):
     cursor = conn.cursor()
-    query = "INSERT INTO base_vectordactrung (vector_dt , sinhvien_id) VALUES (%s , %s)"
+    query = "INSERT INTO students_attendance_app_vectordactrung (vector_dt , sinhvien_id) VALUES (%s , %s)"
     for embedding in embeddings:
         try:
             embeddingstr = ''
@@ -168,7 +169,7 @@ def decode_vectors(vector):
 def get_embeddings(conn, mssv):
     cursor = conn.cursor()
     embeddings = []
-    query = "SELECT * FROM base_vectordactrung WHERE sinhvien_id = {};".format(mssv)
+    query = "SELECT * FROM students_attendance_app_vectordactrung WHERE sinhvien_id = '{}';".format(mssv)
     result=[]
     try:
         cursor.execute(query)
@@ -192,7 +193,8 @@ def get_embeddings(conn, mssv):
 def get_student_of_class(conn, lophocphan):
     cursor = conn.cursor()
     sinhviens = []
-    query = "SELECT * FROM base_diemdanh WHERE lophocphan_id = {};".format(lophocphan)
+    print(lophocphan)
+    query = "SELECT * FROM students_attendance_app_diemdanh WHERE lophocphan_id = '{}';".format(lophocphan)
     try:
         cursor.execute(query)
         records = cursor.fetchall()
@@ -208,7 +210,7 @@ def get_student_of_class(conn, lophocphan):
 
 def delete_embeddings(conn, mssv):
     cursor = conn.cursor()
-    query = "DELETE FROM base_vectordactrung WHERE sinhvien_id = {};".format(mssv)
+    query = "DELETE FROM students_attendance_app_vectordactrung WHERE sinhvien_id = '{}';".format(mssv)
     try:
         cursor.execute(query)
         conn.commit()
@@ -221,7 +223,7 @@ def delete_embeddings(conn, mssv):
             
 def update_diemdanh(conn, sinhvienid, lophocphanid, buoihoc):
     cursor = conn.cursor()
-    query = "UPDATE base_diemdanh SET {} = 1 WHERE sinhvien_id = {} AND lophocphan_id = {};".format(buoihoc, sinhvienid, lophocphanid)
+    query = "UPDATE students_attendance_app_diemdanh SET {} = 1 WHERE sinhvien_id = '{}' AND lophocphan_id = '{}';".format(buoihoc, sinhvienid, lophocphanid)
     try:
         cursor.execute(query)
         conn.commit()

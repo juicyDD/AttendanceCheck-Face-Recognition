@@ -22,17 +22,18 @@ class AttendanceCheck:
         print('Buổi học đã chọn:', self.day)
         
         self.dssv = db.get_student_of_class(db.connect(), self.lophp)
-        # print(self.dssv)
+        
+        print('so sv trong lop',self.dssv)
+        noneidx = 0
         for mssv in self.dssv:
-            self.vectordactrung_theolop.extend(db.get_embeddings(db.connect(),mssv))
+            vttemp=db.get_embeddings(db.connect(),mssv)
+            print(vttemp)
+            
+            if vttemp is None:
+                continue
+            self.vectordactrung_theolop.extend(vttemp)
         print('so luong vt',len(self.vectordactrung_theolop))
         
-        # for vt in self.vectordactrung_theolop:
-        #     vt = vt[1]
-        
-        # for vt in self.vectordactrung_theolop:
-        #     print(vt)
-        #     print('\n---------------------------')
             
         
         embeddings_ref = []
@@ -109,7 +110,4 @@ class AttendanceCheck:
         #set scroll to listbox
         self.my_list.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.configure(command=self.my_list.yview)
-        #self.window.geometry('600x300')
-        
-        
         
