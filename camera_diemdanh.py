@@ -56,6 +56,12 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
             break
         try: 
             embeddings,bbox=infer.vectoring(img)
+            
+            if bbox is None: 
+                cv2.imshow('Diem danh',img)
+                
+                print(bbox)
+                continue
         except:
             cv2.imshow('Diem danh',img)
             continue

@@ -146,7 +146,8 @@ def stream(cap):
             infer = myInference()
             for img in imageArray:
                 embeddings,bbox=infer.vectoring(img)
-                embeddingsArray.append(embeddings)
+                if embeddings is not None:
+                    embeddingsArray.append(embeddings)
             
             faceprints = average_embeddings(embeddingsArray,coordinatesArray)
             print("end")
