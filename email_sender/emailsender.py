@@ -10,6 +10,9 @@ class EmailSender:
         self.password ='htifchddaxgfljaj'
         self.sender = 'bkcitsystem@gmail.com'
         self.server = smtplib.SMTP('smtp.gmail.com:587')
+        self.server.ehlo()
+        self.server.starttls()
+        self.server.login(self.username,self.password)
     
     def sendEmail(self,sv,lophp,buoihoc,destination):
         self.destination = destination
@@ -28,14 +31,9 @@ class EmailSender:
         msg['From'] = str(self.sender)
         msg['To'] = str(self.destination)
         
+
         
-        
-        
-        
-        self.server.ehlo()
-        self.server.starttls()
-        self.server.login(self.username,self.password)
         self.server.sendmail(self.sender, self.destination, msg.as_string())
-        self.server.quit()
+        
         
         

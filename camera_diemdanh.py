@@ -108,6 +108,7 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
                         db.update_diemdanh(db.connect(),sv,lophp, buoihoc)
                         print('MSSV ',sv,'có mặt')
                         my_email_sender.sendEmail(sv,lophp,buoihoc,db.getEmailSV(db.connect(),sv))
+            my_email_sender.server.quit()
             return
             cap.release()
             cv2.destroyWindow('Diem danh')
