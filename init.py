@@ -1,9 +1,8 @@
 from pathlib import Path
 from camera import camera_init
 import camera
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
+from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 import db
-import smtplib
 from tkinter import *
 from attendance_check_tk import AttendanceCheck
 def set_text(e,text):

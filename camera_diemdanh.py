@@ -99,7 +99,7 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
         
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q') or cv2.getWindowProperty('Diem danh',cv2.WND_PROP_VISIBLE) < 1:
-            my_email_sender.sendEmail("aloooooo","ongnguyenuyennhi@gmail.com")
+            # my_email_sender.sendEmail("aloooooo","ongnguyenuyennhi@gmail.com")
             if sinhviencomat is not None:
                 sinhviencomat_set = set(sinhviencomat)
                 for sv in sinhviencomat_set:
@@ -107,6 +107,7 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
                     if number_of_frames > 5:
                         db.update_diemdanh(db.connect(),sv,lophp, buoihoc)
                         print('MSSV ',sv,'có mặt')
+                        my_email_sender.sendEmail(sv,lophp,buoihoc,db.getEmailSV(db.connect(),sv))
             return
             cap.release()
             cv2.destroyWindow('Diem danh')

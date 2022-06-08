@@ -52,6 +52,24 @@ def getSV(conn, mssv):
             conn.close()
             # print('\nConnection closed')
     return sv
+def getEmailSV(conn,mssv):
+    cursor = conn.cursor()
+    emailsv = None
+    query = "SELECT email FROM students_attendance_app_sinhvien WHERE id = {};".format(mssv)
+    try:
+        cursor.execute(query)
+        records = cursor.fetchall()
+        for record in records:
+            emailsv = record
+            break
+    except(Exception, Error) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            cursor.close()
+            conn.close()
+    return emailsv
+    
 def getLopHocPhan(conn, magv):
     cursor = conn.cursor()
     lophocphan = []
