@@ -3,6 +3,7 @@ import numpy as np
 import cv2,os
 from detection_recognition.tools import model_restore_from_pb
 import tensorflow.compat.v1 as tf
+
 from detection_recognition.facemaskDetect import FacemaskDetect
 import mediapipe as mp
 tf.disable_v2_behavior()

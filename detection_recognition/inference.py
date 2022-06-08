@@ -31,7 +31,7 @@ class myInference:
         self.mp_facedetection = self.mp_facedetector.FaceDetection(min_detection_confidence=0.7)
         
         #calculate distance config
-        self.threshold = 0.8
+        self.threshold = 0.7
         with tf.Graph().as_default():
             self.tf_tar = tf.placeholder(dtype=tf.float32, shape =self.tf_embeddings.shape[-1])
             self.tf_ref = tf.placeholder(dtype=tf.float32,shape =self.tf_embeddings.shape)
@@ -65,8 +65,11 @@ class myInference:
 
                  #crop và resize cho vừa vứi input của model
                 img_fr=img_rgb[bbox[1]:bbox[1]+bbox[3],bbox[0]:bbox[0]+bbox[2],:] #crop
-                img_fr=cv2.resize(img_fr,(int(self.model_shape[2]),int(self.model_shape[1]))) #resize
-                img_fr=np.expand_dims(img_fr,axis=0) #make 4 dimensions
+                try:
+                    img_fr=cv2.resize(img_fr,(int(self.model_shape[2]),int(self.model_shape[1]))) #resize
+                    img_fr=np.expand_dims(img_fr,axis=0) #make 4 dimensions
+                except Exception:
+                    return None, None
                 
                 self.feed_dict[self.tf_input] = img_fr
                 embeddings_tar=self.sess.run(self.tf_embeddings,feed_dict=self.feed_dict) #xuất ra embeddings của khuôn mặt đã detect
@@ -94,7 +97,10 @@ class myInference:
 
                  #crop và resize cho vừa vứi input của model
                 img_fr=img_rgb[bbox[1]:bbox[1]+bbox[3],bbox[0]:bbox[0]+bbox[2],:] #crop
-                img_fr=cv2.resize(img_fr,(int(self.model_shape[2]),int(self.model_shape[1]))) #resize
+                try: 
+                    img_fr=cv2.resize(img_fr,(int(self.model_shape[2]),int(self.model_shape[1]))) #resize
+                except Exception as e:
+                    continue
                 img_fr=np.expand_dims(img_fr,axis=0) #make 4 dimensions
                 
                 self.feed_dict[self.tf_input] = img_fr
@@ -104,7 +110,9 @@ class myInference:
                 distance =self.sess_cal.run(self.tf_dis,feed_dict=self.feed_dict_2)
                 arg =np.argmin(distance) #trả về index của khuôn mặt gần nhất với ảnh trong camera
                 if distance[arg]<self.threshold:
+                    
                     return arg
+            print('distance:',distance[arg])
         return -1 
     def distance_calculate_init(self,embeddings_ref):
         self.feed_dict_2 ={self.tf_ref : embeddings_ref} #vector đặc trưng lưu trong db là vector reference

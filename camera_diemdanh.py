@@ -7,6 +7,7 @@ import mediapipe as mp
 import db
 from camera_diemdanh import *
 from detection_recognition.tools import model_restore_from_pb
+from email_sender.emailsender import EmailSender
 imageArray=[]
 coordinatesArray=[]
 embeddingsArray=[]
@@ -22,6 +23,7 @@ def camera_init(camera_source=0,resolution="480"):
     coordinatesArray=[]
     embeddingsArray=[]
     facePrints=[]
+    
     resolution_dict ={"480":[480,640],"720":[720,1280],"1080":[1080,1920]}
     cap = cv2.VideoCapture(camera_source)
 
@@ -40,6 +42,7 @@ def camera_init(camera_source=0,resolution="480"):
 
             
 def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
+    my_email_sender =EmailSender()
     infer = myInference()
     
     #fmd2 = FacemaskDetect(r'model\facemask_model_new.pb')
@@ -50,21 +53,21 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
     infer.distance_calculate_init(embeddings_ref=embeddings_ref)
     while(cap.isOpened()):
         ret,img =cap.read()
-        
+        ini_img = img
         if not ret:
             print("Error: failed to capture image")
             break
-        try: 
-            embeddings,bbox=infer.vectoring(img)
+        # try: 
+        embeddings,bbox=infer.vectoring(img)
+        
+        if bbox is None: 
+            cv2.imshow('Diem danh',ini_img)
             
-            if bbox is None: 
-                cv2.imshow('Diem danh',img)
-                
-                print(bbox)
-                continue
-        except:
-            cv2.imshow('Diem danh',img)
+            print(bbox)
             continue
+        # except:
+        #     cv2.imshow('Diem danh',ini_img)
+        #     continue
         
         img_rgb =cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         img_rgb = img_rgb.astype(np.float32)
@@ -81,10 +84,14 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
         arg = -1
         arg = infer.distance_calculate(img)
         print(arg)
-        mssv_recognized = vectordactrung_theolop[arg][2]
+        if arg!=-1:
+            mssv_recognized = vectordactrung_theolop[arg][2]
+        else:
+            mssv_recognized='Undefined'
         print(res)
         print(mssv_recognized)
-        sinhviencomat.append(mssv_recognized)
+        if mssv_recognized!='Undefined':
+            sinhviencomat.append(mssv_recognized)
         cv2.putText(img, "%s: %s" % (str(res), str(mssv_recognized)),
             (bbox[0] + 2, bbox[1] - 2),
             cv2.FONT_HERSHEY_SIMPLEX, 0.8, color)
@@ -92,15 +99,18 @@ def stream(cap,embeddings_ref,vectordactrung_theolop,lophp, buoihoc):
         
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q') or cv2.getWindowProperty('Diem danh',cv2.WND_PROP_VISIBLE) < 1:
-            sinhviencomat_set = set(sinhviencomat)
-            for sv in sinhviencomat_set:
-                number_of_frames = sinhviencomat.count(sv)
-                if number_of_frames > 20:
-                    db.update_diemdanh(db.connect(),sv,lophp, buoihoc)
-                    print('MSSV ',sv,'có mặt')
+            my_email_sender.sendEmail("aloooooo","ongnguyenuyennhi@gmail.com")
+            if sinhviencomat is not None:
+                sinhviencomat_set = set(sinhviencomat)
+                for sv in sinhviencomat_set:
+                    number_of_frames = sinhviencomat.count(sv)
+                    if number_of_frames > 5:
+                        db.update_diemdanh(db.connect(),sv,lophp, buoihoc)
+                        print('MSSV ',sv,'có mặt')
             return
             cap.release()
             cv2.destroyWindow('Diem danh')
+    # cv2.imshow('Diem danh', img) 
             
 def getColorValue(myresult):
     if myresult=='correct_mask':
